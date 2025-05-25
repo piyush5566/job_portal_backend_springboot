@@ -1,5 +1,7 @@
-package com.jobportal;
+package com.jobportal.controller;
 
+import com.jobportal.model.Job;
+import com.jobportal.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

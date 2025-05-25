@@ -67,6 +67,18 @@
     <scope>runtime</scope>
     <optional>true</optional>
 </dependency>
+    <!-- Azure Blob Storage -->
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-storage-blob</artifactId>
+      <version>12.25.0</version>
+    </dependency>
+    <!-- Spring Security -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <version>3.2.5</version>
+    </dependency>
 
   </dependencies>
   <build>
@@ -83,6 +95,9 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>3.2.5</version>
+        <configuration>
+          <mainClass>com.jobportal.App</mainClass>
+        </configuration>
       </plugin>
     </plugins>
   </build>

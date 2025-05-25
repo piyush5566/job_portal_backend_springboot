@@ -1,5 +1,7 @@
-package com.jobportal;
+package com.jobportal.controller;
 
+import com.jobportal.model.Application;
+import com.jobportal.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -8,15 +10,15 @@ import java.util.List;
 @RequestMapping("/applications")
 public class ApplicationController {
     @Autowired
-    private ApplicationRepository applicationRepository;
+    private ApplicationService applicationService;
 
     @GetMapping
     public List<Application> getAllApplications() {
-        return applicationRepository.findAll();
+        return applicationService.getAllApplications();
     }
 
     @PostMapping
     public Application createApplication(@RequestBody Application application) {
-        return applicationRepository.save(application);
+        return applicationService.createApplication(application);
     }
 }

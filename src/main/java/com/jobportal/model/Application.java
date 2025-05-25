@@ -1,4 +1,4 @@
-package com.jobportal;
+package com.jobportal.model;
 
 import jakarta.persistence.*;
 
