@@ -1,18 +1,21 @@
 package com.jobportal;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.jobportal.User;
+import com.jobportal.UserRepository;
 
 import java.util.Date;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = {"http://localhost:8082", "http://localhost:3000"})
 public class AuthController {
-    private static final String SECRET_KEY = "replace_this_with_a_strong_secret";
+    private static final String SECRET_KEY = "replace_this_with_a_strong_secret_key_that_is_at_least_32_bytes_long";
     private static final long EXPIRATION_TIME = 86400000; // 1 day in ms
 
     @Autowired
@@ -24,13 +27,14 @@ public class AuthController {
                 .filter(u -> u.getEmail().equals(loginRequest.getEmail()) && u.getPassword().equals(loginRequest.getPassword()))
                 .findFirst();
         if (userOpt.isPresent()) {
+            byte[] keyBytes = SECRET_KEY.getBytes();
             String token = Jwts.builder()
                     .setSubject(userOpt.get().getEmail())
                     .claim("role", userOpt.get().getRole())
                     .claim("username", userOpt.get().getUsername())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                    .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                    .signWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor(keyBytes))
                     .compact();
             return ResponseEntity.ok(new JwtResponse(token));
         } else {
