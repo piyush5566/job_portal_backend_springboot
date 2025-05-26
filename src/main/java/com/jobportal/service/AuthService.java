@@ -10,11 +10,14 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Jwts;
 import java.util.Date;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class AuthService {
-    private static final String SECRET_KEY = "replace_this_with_a_strong_secret_key_that_is_at_least_32_bytes_long";
-    private static final long EXPIRATION_TIME = 86400000; // 1 day in ms
+    @Value("${jwt.secret}")
+    private String secretKey;
+    @Value("${jwt.expiration.ms}")
+    private long expirationTime;
 
     @Autowired
     private UserRepository userRepository;
@@ -26,13 +29,13 @@ public class AuthService {
                 .filter(u -> u.getEmail().equals(email))
                 .findFirst();
         if (userOpt.isPresent() && passwordEncoder.matches(password, userOpt.get().getPassword())) {
-            byte[] keyBytes = SECRET_KEY.getBytes();
+            byte[] keyBytes = secretKey.getBytes();
             String token = Jwts.builder()
                     .setSubject(userOpt.get().getEmail())
                     .claim("role", userOpt.get().getRole())
                     .claim("username", userOpt.get().getUsername())
                     .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                    .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                     .signWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor(keyBytes))
                     .compact();
             return ResponseEntity.ok(new JwtResponse(token));

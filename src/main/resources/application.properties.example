@@ -1,0 +1,55 @@
+# Server Configuration
+server.port=8080
+
+
+# URL for the H2 database; uses a file-based database stored at ./data/jobportaldb
+# spring.datasource.url
+
+# Fully qualified name of the JDBC driver for H2 database
+# spring.datasource.driverClassName
+
+# Username for connecting to the H2 database
+# spring.datasource.username
+
+# Password for connecting to the H2 database (empty by default for H2)
+# spring.datasource.password
+
+# Hibernate dialect to use for H2 database; enables Hibernate to generate SQL optimized for H2
+# spring.jpa.database-platform
+spring.datasource.url=jdbc:h2:file:./data/jobportaldb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+# H2 Console Configuration
+# Enables the H2 database console, accessible at /h2-console (credentials above)
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+# JPA/Hibernate Configuration
+# ddl-auto: 'update' automatically updates the schema. Use 'validate' or 'none' in production.
+spring.jpa.hibernate.ddl-auto=update
+# show-sql: Logs SQL statements. Useful for debugging, consider disabling in production for performance.
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# JWT Configuration
+# IMPORTANT: Replace 'replace_this_with_a_strong_secret_key_that_is_at_least_32_bytes_long'
+# with a cryptographically strong, randomly generated secret key. It should be at least 32 bytes (256 bits) long for HS256.
+# You can generate one, for example, using: new SecureRandom().generateSeed(32) and then Base64 encode it.
+jwt.secret=replace_this_with_a_strong_secret_key_that_is_at_least_32_bytes_long
+jwt.expiration.ms=86400000 # Token expiration time in milliseconds (e.g., 86400000ms = 24 hours)
+
+# Azure Blob Storage Configuration
+# IMPORTANT: Replace with your actual Azure Storage connection string and container name.
+# These are used by AzureBlobService.java
+azure.storage.connection-string=YOUR_AZURE_STORAGE_CONNECTION_STRING_GOES_HERE
+azure.storage.container-name=YOUR_AZURE_STORAGE_CONTAINER_NAME_GOES_HERE
+
+# Logging Configuration (Optional)
+# You can set logging levels for different packages if needed.
+# logging.level.org.springframework.security=DEBUG
+# logging.level.com.jobportal=DEBUG
+# logging.level.org.hibernate.SQL=DEBUG
+# logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE # To see bound parameters
