@@ -29,4 +29,34 @@ public class AzureBlobService {
         }
         return blobClient.getBlobUrl();
     }
+
+    public InputStream getFileStream(String blobName) throws Exception {
+        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
+                .connectionString(connectionString)
+                .buildClient();
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
+        BlobClient blobClient = containerClient.getBlobClient(blobName);
+        return blobClient.openInputStream();
+    }
+
+    public String uploadFileAndReturnBlobPath(MultipartFile file, String folder) throws Exception {
+        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
+                .connectionString(connectionString)
+                .buildClient();
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
+        String filename = folder + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
+        BlobClient blobClient = containerClient.getBlobClient(filename);
+        try (InputStream is = file.getInputStream()) {
+            blobClient.upload(is, file.getSize(), true);
+        }
+        return filename; // Only the blob path, not the public URL
+    }
+
+    public String getConnectionString() {
+        return connectionString;
+    }
+
+    public String getContainerName() {
+        return containerName;
+    }
 }

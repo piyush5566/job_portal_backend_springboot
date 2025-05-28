@@ -25,15 +25,17 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     public ResponseEntity<?> login(String email, String password) {
-        Optional<User> userOpt = userRepository.findAll().stream()
-                .filter(u -> u.getEmail().equals(email))
-                .findFirst();
+        // Use the more efficient findByEmail method
+        Optional<User> userOpt = Optional.ofNullable(userRepository.findByEmail(email));
         if (userOpt.isPresent() && passwordEncoder.matches(password, userOpt.get().getPassword())) {
+            System.out.println("AuthService - User Profile Picture from DB: " + userOpt.get().getProfilePicture());
+// ... rest of the token building
             byte[] keyBytes = secretKey.getBytes();
             String token = Jwts.builder()
                     .setSubject(userOpt.get().getEmail())
                     .claim("role", userOpt.get().getRole())
                     .claim("username", userOpt.get().getUsername())
+                    .claim("profilePicture", userOpt.get().getProfilePicture())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                     .signWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor(keyBytes))
